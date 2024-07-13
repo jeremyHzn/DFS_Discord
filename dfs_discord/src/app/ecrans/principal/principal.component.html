@@ -1,0 +1,75 @@
+<main>
+  <aside>
+    <div class="liste-serveur">
+      <div class="serveur" routerLink="/ajout-serveur" matTooltip="Créer un nouveau serveur" matTooltipPosition="right">
+        <mat-icon fontIcon="add_circle"></mat-icon>
+      </div>
+
+      @for (serveur of listeServeur; track serveur._id) {
+
+      <div class="serveur" [matTooltip]="serveur.nom" matTooltipPosition="right"
+        (click)="onSelectionServeur(serveur._id)">
+        <img [attr.src]="serveur.urlLogo" />
+      </div>
+
+      }
+    </div>
+    <div class="info-profil">
+      <img class="avatar"
+        src="https://play-lh.googleusercontent.com/0goocG7RJZDZ41ShfBPl-h7ctwHKHjqzn4nSImyL8_RWyXqeYNKw-CdGAKhgPGZG5Es" />
+      <span>John DOE</span>
+      <mat-icon class="bouton-profil" fontIcon="settings" routerLink="/profil"></mat-icon>
+    </div>
+  </aside>
+
+  @if(selectedServeur) {
+  <div class="salon">
+    <form class="formulaire-salon" [formGroup]="formulaire" (ngSubmit)="onCreateSalon()">
+      <mat-form-field>
+        <mat-label>Nom du salon</mat-label>
+        <input matInput placeholder="Ex. Général" formControlName="nom" />
+      </mat-form-field>
+      <button type="submit" mat-flat-button color="primary">
+        Créer le salon
+      </button>
+    </form>
+
+    @for (salon of listeSalon; track salon._id) {
+      @if(salon.serveur == selectedServeur){
+        <p class="salon-nom" (click)="onSelectionSalon(salon._id, salon.nom)" >{{ salon.nom }}</p>
+      }
+    }
+  </div>
+  }
+
+
+ @if(showMessageInput){
+
+   <div class="liste-message">
+     @if(selectedSalon) {
+       <h3>{{ selectedSalonNom }}</h3>
+       <div>
+         <form class="formulaire-message" [formGroup]="formulaireMessage" (ngSubmit)="onCreateMessage()">
+           <mat-form-field>
+             <mat-label>Envoyer un message</mat-label>
+             <input matInput placeholder="" formControlName="contenu" />
+           </mat-form-field>
+           <button type="submit" mat-flat-button color="primary">
+             Envoyer
+           </button>
+         </form>
+       </div>
+     }
+     @for(message of listeMessage; track message._id) {
+         <div class="message">
+           <img class="avatar" [attr.src]="message.utilisateurAvatar" />
+           <div class="partie-message">
+             <div class="utilisateur">{{ message.utilisateurEmail }}</div>
+             <p class="contenu">{{ message.contenu }}</p>
+             <p class="date">{{ message.date | date:'short' }}</p>
+           </div>
+         </div>
+     }
+   </div>
+ }
+</main>
